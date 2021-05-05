@@ -144,7 +144,7 @@ class GameWithTweens extends FlxState
 	}
 
 	/**
-	 * Intansiates game objects, arrays and initializes the game
+	 * Instantiates game objects, arrays and initializes the game
 	 * @param row 
 	 * @param col 
 	 */
@@ -210,7 +210,8 @@ class GameWithTweens extends FlxState
 				FlxTween.tween(icons[pos], {y: GRID_Y + r * TILE_SIZE}, 0.5, {startDelay: Math.sqrt(d) / 10, ease: FlxEase.quintIn, type: ONESHOT});
 			}
 		}
-		canGiveHints = true; // now it's safe to access the arrays and check for hints
+		// now it's safe to access the arrays and check for hints
+		canGiveHints = true;
 	}
 
 	//////////////////////////////////
@@ -384,7 +385,7 @@ class GameWithTweens extends FlxState
 	 * @param col1 
 	 * @param row2 
 	 * @param col2 
-	 * @return Bool
+	 * @return Bool true if they are adjacent
 	 */
 	function isAdjacent(row1:Int, col1:Int, row2:Int, col2:Int):Bool
 	{
@@ -625,12 +626,14 @@ class GameWithTweens extends FlxState
 			var r = ROWS;
 			while (r > 1)
 			{
+				// if an emty tile found...
 				r--;
 				if (tiles[c][r] == NOONE)
 				{
 					// here
 					trace("empty tile found at row: " + r + " col: " + c);
 
+					// ...start looking its collumn upwards...
 					var rr = r;
 					while (rr > 0)
 					{
@@ -641,6 +644,7 @@ class GameWithTweens extends FlxState
 							break;
 						}
 					}
+					// ... and find the first icon to move it downwards
 					if (tiles[c][rr] != NOONE)
 					{
 						// update the tiles array
@@ -682,6 +686,7 @@ class GameWithTweens extends FlxState
 	 */
 	function addNewIcons()
 	{
+		// If other tweens still running, wait
 		if (@:privateAccess FlxTween.globalManager._tweens.length > 0)
 		{
 			haxe.Timer.delay(function()
@@ -738,14 +743,14 @@ class GameWithTweens extends FlxState
 
 	/** 
 	 * Check at the position [row] [col], if a new chain occurs and remove it
-	 * @param rr 
-	 * @param cc 
+	 * @param row 
+	 * @param col 
 	 */
-	function checkForChainsAt(rr, cc)
+	function checkForChainsAt(row, col)
 	{
-		if (isChain(rr, cc))
+		if (isChain(row, col))
 		{
-			removeIcons(rr, cc);
+			removeIcons(row, col);
 		}
 	}
 

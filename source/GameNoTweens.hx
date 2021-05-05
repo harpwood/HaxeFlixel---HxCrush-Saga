@@ -142,7 +142,7 @@ class GameNoTweens extends FlxState
 	}
 
 	/**
-	 * Intansiates game objects, arrays and initializes the game
+	 * Instantiates game objects, arrays and initializes the game
 	 * @param row 
 	 * @param col 
 	 */
@@ -193,7 +193,8 @@ class GameNoTweens extends FlxState
 			}
 		}
 
-		canGiveHints = true; // now it's safe to access the arrays and check for hints
+		// now it's safe to access the arrays and check for hints
+		canGiveHints = true;
 	}
 
 	//////////////////////////////////
@@ -367,7 +368,7 @@ class GameNoTweens extends FlxState
 	 * @param col1 
 	 * @param row2 
 	 * @param col2 
-	 * @return Bool
+	 * @return Bool Bool true if they are adjacent
 	 */
 	function isAdjacent(row1:Int, col1:Int, row2:Int, col2:Int):Bool
 	{
@@ -595,12 +596,14 @@ class GameNoTweens extends FlxState
 			var r = ROWS;
 			while (r > 1)
 			{
+				// if an emty tile found...
 				r--;
 				if (tiles[c][r] == NOONE)
 				{
 					// here
 					trace("empty tile found at row: " + r + " col: " + c);
 
+					// ...start looking its collumn upwards...
 					var rr = r;
 					while (rr > 0)
 					{
@@ -611,6 +614,7 @@ class GameNoTweens extends FlxState
 							break;
 						}
 					}
+					// ... and find the first icon to move it downwards
 					if (tiles[c][rr] != NOONE)
 					{
 						// update the tiles array
@@ -668,14 +672,14 @@ class GameNoTweens extends FlxState
 
 	/** 
 	 * Check at the position [row] [col], if a new chain occurs and remove it
-	 * @param rr 
-	 * @param cc 
+	 * @param row 
+	 * @param col 
 	 */
-	function checkForChainsAt(rr, cc)
+	function checkForChainsAt(row, col)
 	{
-		if (isChain(rr, cc))
+		if (isChain(row, col))
 		{
-			removeIcons(rr, cc);
+			removeIcons(row, col);
 		}
 	}
 
