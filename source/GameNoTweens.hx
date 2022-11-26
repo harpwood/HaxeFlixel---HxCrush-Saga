@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.input.mouse.FlxMouseEventManager;
+import flixel.input.mouse.FlxMouseEvent;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
@@ -162,7 +162,7 @@ class GameNoTweens extends FlxState
 				tile.col = c;
 				tiles[c].push(Math.floor(Math.random() * TOTAL_ITEMS)); // index of icon
 				add(tile);
-				FlxMouseEventManager.add(tile, onTileMouseDown, onTileMouseUp, onTileMouseOver, onTileMouseOut);
+				FlxMouseEvent.add(tile, onTileMouseDown, onTileMouseUp, onTileMouseOver, onTileMouseOut);
 			}
 		}
 

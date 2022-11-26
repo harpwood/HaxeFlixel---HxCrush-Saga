@@ -3,7 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.input.mouse.FlxMouseEventManager;
+import flixel.input.mouse.FlxMouseEvent;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -164,7 +164,7 @@ class GameWithTweens extends FlxState
 				tile.col = c;
 				tiles[c].push(Math.floor(Math.random() * TOTAL_ITEMS)); // index of icon
 				add(tile);
-				FlxMouseEventManager.add(tile, onTileMouseDown, onTileMouseUp, onTileMouseOver, onTileMouseOut);
+				FlxMouseEvent.add(tile, onTileMouseDown, onTileMouseUp, onTileMouseOver, onTileMouseOut);
 			}
 		}
 
