@@ -1,2 +1,15 @@
-#Ignore export folder
+# Ignore export folder (build output)
 /export
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE
+.vscode/
+.idea/
+*.iml
+
+# Haxe/VSCode completion cache
+completion.hxml
+.vshaxe/

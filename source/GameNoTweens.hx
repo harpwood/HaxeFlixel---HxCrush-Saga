@@ -60,7 +60,7 @@ class GameNoTweens extends FlxState
 		add(headText);
 
 		// Initilize new button
-		var btn:FlxButton = new FlxButton(FlxG.width / 2 - 100, 50, "Click here to test\ncore mechanics with tweens!\n(sorry buggy tweens)", clickBtn);
+		var btn:FlxButton = new FlxButton(FlxG.width / 2 - 100, 50, "Click here to test\ncore mechanics with tweens!", clickBtn);
 		btn.label.setFormat(null, 12);
 		btn.loadGraphic("assets/images/button.png", false, 200, 72);
 		add(btn);

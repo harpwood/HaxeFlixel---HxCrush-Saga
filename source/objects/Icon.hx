@@ -30,7 +30,7 @@ class Icon extends FlxSprite
 	public function destroyMe():Void
 	{
 		if (tween != null)
-			tween.cancel;
+			tween.cancel(); // was `tween.cancel;` - a bare method reference, never actually called
 		name = "destroyed";
 		destroy();
 	}

@@ -4,8 +4,9 @@ class IconName
 {
 	public static inline final EMPTY = "empty";
 
+	// These match the actual file names on disk (with spaces).
 	static inline final WAFFLE_WHITE = "waffle white";
-	static inline final START_RED = "star red";
+	static inline final STAR_RED = "star red";
 	static inline final COOKIE = "cookie";
 	static inline final DONUT = "donut";
 	static inline final CUP_CAKE = "cup cake";
@@ -42,7 +43,7 @@ class IconName
 			case 9:
 				return COOKIE;
 			case 10:
-				return START_RED;
+				return STAR_RED;
 			case 11:
 				return WAFFLE_WHITE;
 			default:

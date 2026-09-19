@@ -40,6 +40,12 @@ class GameWithTweens extends FlxState
 
 	private var canGiveHints:Bool = false;
 
+	// Blocks tile clicks while a swap, fall or refill animation is still
+	// in flight - true from the moment the board starts changing until
+	// settleCheck() confirms no tweens are running and no chain is left
+	// unresolved anywhere on the board.
+	private var isResolving:Bool = true;
+
 	override public function create()
 	{
 		super.create();
@@ -58,7 +64,7 @@ class GameWithTweens extends FlxState
 		var headText = new FlxText(0, 0, FlxG.width, "", 12);
 		headText.color = FlxColor.RED;
 		headText.alignment = FlxTextAlign.CENTER;
-		headText.text = "Game prototype with tweens\n(WARNING: tweens are poorly implemented and are BUGGY)";
+		headText.text = "Game prototype with tweens";
 		add(headText);
 
 		// Initilize new button
@@ -108,8 +114,10 @@ class GameWithTweens extends FlxState
 		// manually fix if things get broken
 		if (FlxG.keys.justPressed.C)
 		{
+			isResolving = true;
 			evalGrid();
 			checkForChains();
+			settleCheck();
 		}
 
 		// detect hints
@@ -212,6 +220,8 @@ class GameWithTweens extends FlxState
 		}
 		// now it's safe to access the arrays and check for hints
 		canGiveHints = true;
+
+		settleCheck();
 	}
 
 	//////////////////////////////////
@@ -223,6 +233,9 @@ class GameWithTweens extends FlxState
 	 */
 	function onTileMouseDown(tile:Tile)
 	{
+		if (isResolving)
+			return;
+
 		// if the picked tile is already selected, deselect it
 		if ((pickedRow == tile.row) && (pickedCol == tile.col))
 		{
@@ -417,6 +430,8 @@ class GameWithTweens extends FlxState
 	function swapIcons(row1:Int, col1:Int, row2:Int, col2:Int)
 	{
 		// initiate swap
+		isResolving = true;
+
 		var p1:Int = getIconPos(row1, col1);
 		var p2:Int = getIconPos(row2, col2);
 		var t:Float = 0.2;
@@ -511,6 +526,37 @@ class GameWithTweens extends FlxState
 			// swap back their position in array
 			swapTiles(row1, col1, row2, col2);
 		}
+
+		settleCheck();
+	}
+
+	/**
+	 * Waits until no tween is running anywhere and no chain is left
+	 * unresolved on the board, then releases the input lock. Re-schedules
+	 * itself while either condition still holds, so it naturally rides out
+	 * multi-step cascades without needing to be called at every step.
+	 */
+	function settleCheck():Void
+	{
+		if (@:privateAccess FlxTween.globalManager._tweens.length > 0)
+		{
+			haxe.Timer.delay(settleCheck, 30);
+			return;
+		}
+
+		for (c in 0...COLS)
+		{
+			for (r in 0...ROWS)
+			{
+				if (isChain(r, c))
+				{
+					haxe.Timer.delay(settleCheck, 30);
+					return;
+				}
+			}
+		}
+
+		isResolving = false;
 	}
 
 	/**
@@ -721,7 +767,11 @@ class GameWithTweens extends FlxState
 							onComplete: onAddedNewIcon.bind(_, r, c)
 						};
 
-						icon.tween = FlxTween.tween(icon, {y: GRID_Y + r * TILE_SIZE}, 0.5, {ease: FlxEase.quintIn});
+						// was: FlxTween.tween(icon, {...}, 0.5, {ease: FlxEase.quintIn})
+						// - a fresh anonymous object that silently dropped the
+						// onComplete callback above, so a newly-spawned icon
+						// landing on a match was never auto-detected.
+						icon.tween = FlxTween.tween(icon, {y: GRID_Y + r * TILE_SIZE}, 0.5, {ease: FlxEase.quintIn, type: ONESHOT, onComplete: options.onComplete});
 
 						add(icon);
 					}
