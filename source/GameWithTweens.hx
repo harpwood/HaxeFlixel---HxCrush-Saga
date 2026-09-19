@@ -566,6 +566,11 @@ class GameWithTweens extends FlxState
 	 */
 	function removeIcons(row:Int, col:Int)
 	{
+		// Already cleared by another removeIcons() call from the same swap
+		// (both swapped tiles can belong to the same chain on a 4+ match).
+		if (tiles[col][row] == NOONE)
+			return;
+
 		if (@:privateAccess FlxTween.globalManager._tweens.length > 0)
 		{
 			haxe.Timer.delay(function()
@@ -658,6 +663,8 @@ class GameWithTweens extends FlxState
 	function destroyIcon(row, col)
 	{
 		var p:Int = getIconPos(row, col);
+		if (p == -1)
+			return; // already destroyed - avoid icons.splice(-1, 1) nuking an unrelated icon
 		var icon:Array<Icon> = icons.splice(p, 1);
 		icon[0].destroyMe();
 	}
